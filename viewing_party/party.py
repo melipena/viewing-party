@@ -29,6 +29,8 @@ def watch_movie(user_data, title):
             user_data["watchlist"].remove(movie)
             user_data["watched"].append(movie)
 
+            return user_data
+
     return user_data
 
 
@@ -37,6 +39,37 @@ def watch_movie(user_data, title):
 # ------------- WAVE 2 --------------------
 # -----------------------------------------
 
+def get_watched_avg_rating(user_data):
+    sum=0
+    avg=0
+    length=len(user_data["watched"])
+    for i in range(length):
+        sum += user_data["watched"][i]["rating"]
+
+        avg = sum/length
+    return avg
+    
+
+
+def get_most_watched_genre(user_data):
+    genre_dict={}
+    long=len(user_data['watched'])
+    if long > 0:
+        for i in range(long):
+            genre= user_data["watched"][i]["genre"]
+            if genre in genre_dict.keys():
+                genre_dict[genre]=+1
+            else:
+                genre_dict[genre]=1
+
+        genre_list=[]
+        for keys,values in genre_dict.items():
+            genre_list.append((values,keys))
+        genre_list.sort(reverse=True)
+        return genre_list[0][1]
+    else:
+        return None 
+
 
 
 
@@ -44,6 +77,29 @@ def watch_movie(user_data, title):
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
 
+def get_unique_watched(user_data):
+    
+    # Create set of movies friends have watched
+    friend_set = set()
+    for friend in user_data['friends']:
+        for movie in friend['watched']:
+            friend_set.add(movie['title'])
+    # Initialize unique_watched list
+    unique_watched = []
+    # Remove values from unique_watched that have titles in friend_set
+    for movie in user_data['watched']:
+        if movie["title"] not in friend_set:
+            unique_watched.append(movie)
+
+    return unique_watched
+
+def get_friends_unique_watched(user_data):
+
+    
+
+
+
+    
         
 # -----------------------------------------
 # ------------- WAVE 4 --------------------
