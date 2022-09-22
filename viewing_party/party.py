@@ -1,6 +1,9 @@
 # ------------- WAVE 1 --------------------
 #Melissa test
 
+from enum import unique
+
+
 def create_movie(title, genre, rating):
     if title and genre and rating:
         new_movie = {}
@@ -87,32 +90,45 @@ def get_unique_watched(user_data):
 
 def get_friends_unique_watched(user_data):
 
-    watched_movies_list=[]
+    watched_movies = set()
     for movie in user_data["watched"]:
-        watched_movies_list.append(movie["title"])
+        watched_movies.add(movie["title"])
 
-    set_watched_movies = set(watched_movies_list)
-
-    friend_movies_list=[]
-
+    unique=[]
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
-            if movie["title"] not in friend_movies_list:
-                friend_movies_list.append(movie["title"])
+            if movie["title"] not in watched_movies and movie not in unique:
+                unique.append(movie)
+    return unique
 
-    set_friends_movies = set(friend_movies_list)
+    # OLD CODE:
 
-    unique_friends_movie= set_friends_movies.difference(set_watched_movies)
+        # watched_movies_list=[]
+        # for movie in user_data["watched"]:
+        #     watched_movies_list.append(movie["title"])
+
+        # set_watched_movies = set(watched_movies_list)
+
+        # friend_movies_list=[]
+
+        # for friend in user_data["friends"]:
+        #     for movie in friend["watched"]:
+        #         if movie["title"] not in friend_movies_list:
+        #             friend_movies_list.append(movie["title"])
+
+        # set_friends_movies = set(friend_movies_list)
+
+        # unique_friends_movie= set_friends_movies.difference(set_watched_movies)
 
 
-    result=[]
+        # result=[]
 
-    for friend in user_data["friends"]:
-        for movie in friend["watched"]:
-            if movie["title"] in unique_friends_movie:
-                result.append(movie)
+        # for friend in user_data["friends"]:
+        #     for movie in friend["watched"]:
+        #         if movie["title"] in unique_friends_movie:
+        #             result.append(movie)
 
-    return result 
+        # return result 
 
 
         
@@ -126,12 +142,12 @@ def get_available_recs(user_data):
     for movie in user_data["watched"]:
         watched_movies.add(movie["title"])
 
-    result=[]
+    recommend=[]
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
             if movie["title"] not in watched_movies and movie["host"] in user_data['subscriptions']:
-                result.append(movie)
-    return result
+                recommend.append(movie)
+    return recommend
 
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
