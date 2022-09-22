@@ -52,25 +52,17 @@ def get_watched_avg_rating(user_data):
 
 
 def get_most_watched_genre(user_data):
-    genre_dict={}
-    long=len(user_data['watched'])
-    if long > 0:
-        for i in range(long):
-            genre= user_data["watched"][i]["genre"]
-            if genre in genre_dict.keys():
-                genre_dict[genre]=+1
-            else:
-                genre_dict[genre]=1
+    
+    freq_genre= []
 
-        genre_list=[]
-        for keys,values in genre_dict.items():
-            genre_list.append((values,keys))
-        genre_list.sort(reverse=True)
-        return genre_list[0][1]
-    else:
+    if len(user_data["watched"])== 0:
         return None 
 
+    for movie in user_data["watched"]:
+        freq_genre.append(movie["genre"])
 
+    most_freq_genre= max(set(freq_genre), key=freq_genre.count)
+    return most_freq_genre
 
 
 # -----------------------------------------
@@ -105,7 +97,8 @@ def get_friends_unique_watched(user_data):
 
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
-            friend_movies_list.append(movie["title"])
+            if movie["title"] not in friend_movies_list:
+                friend_movies_list.append(movie["title"])
 
     set_friends_movies = set(friend_movies_list)
 
@@ -148,6 +141,48 @@ def get_new_rec_by_genre(user_data):
 
     # most frequently watched 
     most_freq=[]
+
+    if len(user_data["watched"])== 0:
+        return user_data["watched"]
+
+    for movie in user_data["watched"]:
+        most_freq.append(movie["genre"])
     
+    freq_genre= max(set(most_freq), key=most_freq.count)
+
+    # 
+    watched_movies = set()
+    for movie in user_data["watched"]:
+        watched_movies.add(movie["title"])
+
+    recomend_movie=[]
+    for friend in user_data["friends"]:
+        for movie in friend["watched"]:
+            if movie["title"] not in watched_movies and movie["genre"] in freq_genre:
+                recomend_movie.append(movie)
+    return recomend_movie
+
+
+def get_rec_from_favorites(user_data):
+
+    friend_set = set()
+    for friend in user_data['friends']:
+        for movie in friend['watched']:
+            friend_set.add(movie['title'])
+
+
+    recomend_movie=[]
+    for movie in user_data["favorites"]:
+        if movie["title"] not in friend_set:
+            recomend_movie.append(movie)
+
+    return recomend_movie 
+
+
+    
+    
+
+
+
 
 
