@@ -155,18 +155,9 @@ def get_available_recs(user_data):
 
 def get_new_rec_by_genre(user_data):
 
-    # most frequently watched 
-    most_freq=[]
+    freq_genre = get_most_watched_genre(user_data)
 
-    if len(user_data["watched"])== 0:
-        return user_data["watched"]
-
-    for movie in user_data["watched"]:
-        most_freq.append(movie["genre"])
     
-    freq_genre= max(set(most_freq), key=most_freq.count)
-
-    # 
     watched_movies = set()
     for movie in user_data["watched"]:
         watched_movies.add(movie["title"])
@@ -174,7 +165,7 @@ def get_new_rec_by_genre(user_data):
     recomend_movie=[]
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
-            if movie["title"] not in watched_movies and movie["genre"] in freq_genre:
+            if movie["title"] not in watched_movies and movie["genre"] == freq_genre:
                 recomend_movie.append(movie)
     return recomend_movie
 
